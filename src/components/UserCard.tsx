@@ -4,9 +4,10 @@ import { MdOutlineEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Celebrity } from "../util/type";
 import { useDispatch } from "react-redux";
-import { deleteCelebrity } from "../util/celebritiesSlice";
+import { deleteCelebrity, editCelebrity } from "../util/celebritiesSlice";
 import DeleteModal from "./DeleteModal";
 import toast from "react-hot-toast";
+import EditModal from "./EditModal";
 
 // Define the props interface for the UserCard component
 interface UserCardProps {
@@ -26,11 +27,13 @@ const UserCard: React.FC<UserCardProps> = ({ celebrity }) => {
   // State to manage the open/close state of the card
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // Function to handle the deletion of a celebrity
   const handleDelete = (id: number) => {
     dispatch(deleteCelebrity(id));
     toast.success("Celebrity deleted successfully");
+    setShowDeleteModal(false);
   };
 
   // Function to show the delete confirmation modal
@@ -43,6 +46,20 @@ const UserCard: React.FC<UserCardProps> = ({ celebrity }) => {
     setShowDeleteModal(false);
   };
 
+  const handleEdit = (updatedUser: Celebrity) => {
+    dispatch(editCelebrity({ id, updatedCelebrity: updatedUser }));
+    toast.success("Celebrity updated successfully");
+    setShowEditModal(false);
+  };
+
+  const handleShowEditModal = () => {
+    setShowEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+  };
+
   return (
     <div className="border p-4 rounded-lg transition-all duration-500 shadow-md">
       {/* Render the delete confirmation modal if showDeleteModal is true */}
@@ -50,6 +67,13 @@ const UserCard: React.FC<UserCardProps> = ({ celebrity }) => {
         <DeleteModal
           onClose={handleCloseDeleteModal}
           onDelete={() => handleDelete(id)}
+        />
+      )}
+      {showEditModal && (
+        <EditModal
+          celebrity={celebrity}
+          onClose={handleCloseEditModal}
+          onSave={handleEdit}
         />
       )}
       <div className="flex items-center justify-between">
@@ -112,7 +136,10 @@ const UserCard: React.FC<UserCardProps> = ({ celebrity }) => {
               className="text-red-500 cursor-pointer"
               onClick={handleShowDeleteModal}
             />
-            <MdOutlineEdit className="text-blue-500 cursor-pointer" />
+            <MdOutlineEdit
+              className="text-blue-500 cursor-pointer"
+              onClick={handleShowEditModal}
+            />
           </div>
         </div>
       </div>
