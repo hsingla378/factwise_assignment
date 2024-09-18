@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa"; // Importing the search icon
 import UserCard from "./UserCard";
@@ -38,7 +38,7 @@ const UserList = () => {
   }, [searchTerm, celebrities]);
 
   return (
-    <div className="max-w-2xl m-auto flex flex-col gap-4 my-4">
+    <div className="max-w-2xl m-auto flex flex-col gap-4 my-4 p-4">
       {/* Search Bar with Icon */}
       <div className="relative">
         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
