@@ -3,6 +3,10 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Celebrity } from "../util/type";
+import { useDispatch } from "react-redux";
+import { deleteCelebrity } from "../util/celebritiesSlice";
+import DeleteModal from "./DeleteModal";
+import toast from "react-hot-toast";
 
 // Define the props interface for the UserCard component
 interface UserCardProps {
@@ -17,11 +21,37 @@ const UserCard: React.FC<UserCardProps> = ({ celebrity }) => {
   // Combine first and last name
   const name = `${first} ${last}`;
 
+  const dispatch = useDispatch();
+
   // State to manage the open/close state of the card
   const [isOpen, setIsOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // Function to handle the deletion of a celebrity
+  const handleDelete = (id: number) => {
+    dispatch(deleteCelebrity(id));
+    toast.success("Celebrity deleted successfully");
+  };
+
+  // Function to show the delete confirmation modal
+  const handleShowDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  // Function to close the delete confirmation modal
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
 
   return (
     <div className="border p-4 rounded-lg transition-all duration-500 shadow-md">
+      {/* Render the delete confirmation modal if showDeleteModal is true */}
+      {showDeleteModal && (
+        <DeleteModal
+          onClose={handleCloseDeleteModal}
+          onDelete={() => handleDelete(id)}
+        />
+      )}
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           {/* Display the celebrity's picture */}
@@ -78,8 +108,11 @@ const UserCard: React.FC<UserCardProps> = ({ celebrity }) => {
           </div>
           {/* Edit and delete icons */}
           <div className="flex gap-4 justify-end text-2xl">
-            <RiDeleteBin6Line className="text-red-500" />
-            <MdOutlineEdit className="text-blue-500" />
+            <RiDeleteBin6Line
+              className="text-red-500 cursor-pointer"
+              onClick={handleShowDeleteModal}
+            />
+            <MdOutlineEdit className="text-blue-500 cursor-pointer" />
           </div>
         </div>
       </div>

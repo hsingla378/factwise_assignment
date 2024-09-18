@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import Header from "../components/Header";
 import UserList from "../components/UserList";
 
@@ -6,6 +7,7 @@ const Landing = () => {
     <>
       <Header />
       <UserList />
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 };
